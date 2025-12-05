@@ -4,7 +4,6 @@
 [![Python](https://img.shields.io/badge/Python-3.10+-green)](https://www.python.org/)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
-> **📚 [Live Documentation](https://taesla.github.io/collision_recovery/)** - 인터랙티브 문서 보기
 
 두산 로봇(M0609)의 충돌 감지 시 자동 복구를 수행하는 ROS2 기반 시스템입니다.
 

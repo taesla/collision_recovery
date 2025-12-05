@@ -31,18 +31,25 @@
             color: white;
         }
         .slide-container {
+            position: relative;
             width: 100%;
-            max-width: 1280px;
+            max-width: 960px;
             aspect-ratio: 16/9;
             margin: 0 auto;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            background: white;
         }
         .slide-container iframe {
-            width: 100%;
-            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1280px;
+            height: 720px;
             border: none;
+            transform: scale(0.75);
+            transform-origin: top left;
         }
         .hero-gradient {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
