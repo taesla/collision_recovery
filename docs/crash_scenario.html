@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crash Scenario Remastered</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 50px;
+            box-sizing: border-box;
+        }
+        
+        .header {
+            border-bottom: 3px solid #0f172a;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+        .header h1 { font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -1px; }
+        .header span { font-size: 18px; color: #64748b; font-weight: 500; }
+
+        /* Comic Grid */
+        .comic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 25px;
+            height: 100%;
+        }
+
+        .panel {
+            border: 3px solid #0f172a;
+            border-radius: 16px;
+            position: relative;
+            background: #f8fafc;
+            overflow: hidden;
+            box-shadow: 5px 5px 0px rgba(15, 23, 42, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .panel-badge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #0f172a;
+            color: white;
+            padding: 6px 18px;
+            border-bottom-right-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            z-index: 10;
+        }
+
+        /* Improved Speech Bubble */
+        .bubble {
+            position: absolute;
+            background: #fff;
+            border: 2.5px solid #0f172a;
+            border-radius: 20px;
+            padding: 12px 18px;
+            font-size: 15px;
+            font-weight: 600;
+            color: #334155;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+            z-index: 20;
+            max-width: 240px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        /* Bubble Tails */
+        .bubble-left:after {
+            content: ''; position: absolute; bottom: -10px; left: 20px;
+            border-width: 10px 10px 0; border-style: solid; border-color: #0f172a transparent;
+            display: block; width: 0;
+        }
+        .bubble-left:before {
+            content: ''; position: absolute; bottom: -6px; left: 22px;
+            border-width: 8px 8px 0; border-style: solid; border-color: #fff transparent;
+            display: block; width: 0; z-index: 1;
+        }
+        .bubble-right:after {
+            content: ''; position: absolute; bottom: -10px; right: 20px;
+            border-width: 10px 10px 0; border-style: solid; border-color: #0f172a transparent;
+            display: block; width: 0;
+        }
+        .bubble-right:before {
+            content: ''; position: absolute; bottom: -6px; right: 22px;
+            border-width: 8px 8px 0; border-style: solid; border-color: #fff transparent;
+            display: block; width: 0; z-index: 1;
+        }
+
+        /* SVG Robot Styles - High Quality */
+        .robot-container {
+            position: absolute;
+            bottom: -10px;
+            width: 100%;
+            height: 220px;
+            display: flex;
+            justify-content: center;
+        }
+        .robot-svg { height: 100%; width: auto; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.2)); }
+        
+        .c-white { fill: #f8fafc; }
+        .c-gray { fill: #cbd5e1; }
+        .c-dark { fill: #475569; }
+        .c-stroke { stroke: #334155; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        
+        /* Accents */
+        .led-blue { fill: #3b82f6; filter: drop-shadow(0 0 5px #3b82f6); }
+        .led-yellow { fill: #eab308; filter: drop-shadow(0 0 8px #eab308); }
+        .led-off { fill: #94a3b8; }
+
+        /* Panel Specific Animations & Styles */
+        /* Panel 2 */
+        .impact-star {
+            position: absolute;
+            top: 50%; right: 20%;
+            font-size: 100px;
+            color: #ef4444;
+            opacity: 0.9;
+            transform: rotate(15deg);
+            z-index: 15;
+            animation: pulse 0.2s infinite alternate;
+        }
+        .impact-text {
+            position: absolute;
+            top: 52%; right: 22%;
+            font-weight: 900;
+            font-size: 24px;
+            color: white;
+            z-index: 16;
+            transform: rotate(15deg);
+        }
+
+        /* Panel 3 */
+        .queue-container {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            width: 100px;
+            height: 160px;
+            border: 2px dashed #94a3b8;
+            border-top: none;
+            background: rgba(255,255,255,0.5);
+            display: flex;
+            flex-direction: column-reverse;
+            padding: 5px;
+            gap: 3px;
+            z-index: 5;
+        }
+        .q-label { font-size: 12px; text-align: center; color: #64748b; font-weight: 700; margin-bottom: 5px; }
+        .q-block {
+            height: 15px; width: 100%;
+            background: #ef4444;
+            border-radius: 2px;
+            border: 1px solid #b91c1c;
+        }
+        .q-block.old { background: #fca5a5; border-color: #ef4444; }
+        
+        .shake-robot { animation: shake 0.5s infinite; }
+        .sweat-drop {
+            position: absolute;
+            font-size: 24px;
+            color: #3b82f6;
+            animation: drop 1s infinite;
+        }
+
+        /* Panel 4 */
+        .panel-crash { background-color: #1e293b; border-color: #000; }
+        .glitch-text {
+            position: absolute;
+            top: 30%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ef4444;
+            font-size: 48px;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-shadow: 2px 0 #fff, -2px 0 #000;
+            z-index: 30;
+        }
+        .skull-icon {
+            position: absolute;
+            top: 15px; right: 15px;
+            font-size: 30px;
+            color: #475569;
+        }
+
+        /* Animations */
+        @keyframes pulse { from { transform: scale(1) rotate(15deg); } to { transform: scale(1.1) rotate(15deg); } }
+        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        @keyframes drop { 0% { opacity: 1; top: 40px; } 100% { opacity: 0; top: 60px; } }
+
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1><i class="fas fa-video mr-3"></i>크래시 발생 시나리오 (Crash Scenario)</h1>
+            <span>Analysis Storyboard</span>
+        </div>
+
+        <div class="comic-grid">
+            <!-- #1 정상 동작 -->
+            <div class="panel">
+                <div class="panel-badge">#1 Normal</div>
+                <div class="bubble bubble-right" style="top: 25px; right: 30px;">
+                    "명령 확인!<br><span class="text-blue-600">P1 지점으로 이동합니다.</span>"
+                </div>
+                
+                <div class="robot-container">
+                    <!-- Normal Robot Pose -->
+                    <svg class="robot-svg" viewBox="0 0 200 220">
+                        <!-- Base -->
+                        <path class="c-gray c-stroke" d="M60,200 L140,200 L130,180 L70,180 Z" />
+                        <!-- Link 1 -->
+                        <path class="c-white c-stroke" d="M80,180 L80,120 L120,120 L120,180 Z" />
+                        <!-- Joint 1 -->
+                        <circle cx="100" cy="120" r="25" class="c-white c-stroke" />
+                        <circle cx="100" cy="120" r="18" class="led-blue" />
+                        <!-- Link 2 -->
+                        <rect x="100" y="105" width="80" height="30" rx="5" class="c-white c-stroke" transform="rotate(-30 100 120)" />
+                        <!-- Joint 2 -->
+                        <circle cx="160" cy="85" r="20" class="c-white c-stroke" />
+                        <circle cx="160" cy="85" r="12" class="c-gray" />
+                        <!-- Link 3 -->
+                        <rect x="160" y="75" width="50" height="20" rx="3" class="c-white c-stroke" transform="rotate(10 160 85)" />
+                    </svg>
+                </div>
+                <div class="absolute bottom-3 left-3 bg-green-100 text-green-700 px-3 py-1 rounded text-sm font-bold border border-green-300">
+                    STATUS: MOVING (2)
+                </div>
+            </div>
+
+            <!-- #2 충돌 발생 -->
+            <div class="panel">
+                <div class="panel-badge" style="background:#b91c1c;">#2 Collision!</div>
+                <div class="bubble bubble-right" style="top: 25px; right: 120px; border-color: #b91c1c; color: #b91c1c;">
+                    "충격 감지!<br>비상 정지!"
+                </div>
+                
+                <div class="impact-star"><i class="fas fa-certificate"></i></div>
+                <div class="impact-text">BANG!</div>
+
+                <div class="robot-container">
+                    <!-- Collision Pose (Tilted back) -->
+                    <svg class="robot-svg" viewBox="0 0 200 220" style="transform: rotate(-5deg);">
+                        <path class="c-gray c-stroke" d="M60,200 L140,200 L130,180 L70,180 Z" />
+                        <path class="c-white c-stroke" d="M80,180 L80,120 L120,120 L120,180 Z" />
+                        <!-- Joint 1 with YELLOW LED -->
+                        <circle cx="100" cy="120" r="25" class="c-white c-stroke" />
+                        <circle cx="100" cy="120" r="18" class="led-yellow" />
+                        <!-- Link 2 -->
+                        <rect x="100" y="105" width="80" height="30" rx="5" class="c-white c-stroke" transform="rotate(-30 100 120)" />
+                        <circle cx="160" cy="85" r="20" class="c-white c-stroke" />
+                        <circle cx="160" cy="85" r="12" class="c-gray" />
+                        <rect x="160" y="75" width="50" height="20" rx="3" class="c-white c-stroke" transform="rotate(10 160 85)" />
+                    </svg>
+                </div>
+                <div class="absolute bottom-3 left-3 bg-yellow-100 text-yellow-800 px-3 py-1 rounded text-sm font-bold border border-yellow-300">
+                    STATUS: SAFE_STOP (5)
+                </div>
+            </div>
+
+            <!-- #3 큐 포화 -->
+            <div class="panel">
+                <div class="panel-badge" style="background:#c2410c;">#3 Queue Full</div>
+                <!-- App speaking from outside/top -->
+                <div class="bubble bubble-left" style="top: 20px; left: 140px; border-style: dashed;">
+                    App:<br>"왜 멈췄어? <strong>movel()</strong><br>계속 가! <strong>movel()</strong>"
+                </div>
+
+                <!-- Queue Graphic -->
+                <div class="queue-container">
+                    <div class="q-label">DRCF Queue</div>
+                    <div class="q-block"></div>
+                    <div class="q-block"></div>
+                    <div class="q-block"></div>
+                    <div class="q-block old"></div>
+                    <div class="q-block old"></div>
+                    <div class="q-block old"></div>
+                    <div class="q-block old"></div>
+                    <div class="text-xs text-red-600 font-bold text-center mt-1">Full!</div>
+                </div>
+
+                <!-- Robot Stressed -->
+                <div class="robot-container shake-robot">
+                    <div class="sweat-drop" style="top:40px; right:80px;"><i class="fas fa-tint"></i></div>
+                    <div class="sweat-drop" style="top:60px; right:100px; animation-delay: 0.3s;"><i class="fas fa-tint"></i></div>
+                    
+                    <svg class="robot-svg" viewBox="0 0 200 220">
+                        <path class="c-gray c-stroke" d="M60,200 L140,200 L130,180 L70,180 Z" />
+                        <path class="c-white c-stroke" d="M80,180 L80,120 L120,120 L120,180 Z" />
+                        <!-- LED still yellow -->
+                        <circle cx="100" cy="120" r="25" class="c-white c-stroke" />
+                        <circle cx="100" cy="120" r="18" class="led-yellow" />
+                        <rect x="100" y="105" width="80" height="30" rx="5" class="c-white c-stroke" transform="rotate(-30 100 120)" />
+                        <circle cx="160" cy="85" r="20" class="c-white c-stroke" />
+                        <circle cx="160" cy="85" r="12" class="c-gray" />
+                        <rect x="160" y="75" width="50" height="20" rx="3" class="c-white c-stroke" transform="rotate(10 160 85)" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- #4 크래시 -->
+            <div class="panel panel-crash">
+                <div class="panel-badge" style="background:#000;">#4 Fatal Error</div>
+                
+                <div class="glitch-text">SEGFAULT</div>
+                <div class="text-gray-400 text-center absolute w-full" style="top: 45%;">
+                    DSR Driver Process Killed<br>
+                    (Memory Corruption)
+                </div>
+                
+                <div class="skull-icon"><i class="fas fa-skull"></i></div>
+
+                <div class="robot-container">
+                    <!-- Dead Robot Pose (Disassembled/Broken) -->
+                    <svg class="robot-svg" viewBox="0 0 200 220" style="opacity:0.4;">
+                        <!-- Base -->
+                        <path class="c-dark c-stroke" d="M60,200 L140,200 L130,180 L70,180 Z" />
+                        <!-- Link 1 (Fallen over) -->
+                        <path class="c-dark c-stroke" d="M150,190 L190,190 L190,150 L150,150 Z" transform="rotate(45 170 170)" />
+                        <!-- Joint 1 (Off) -->
+                        <circle cx="100" cy="180" r="25" class="c-dark c-stroke" />
+                        <circle cx="100" cy="180" r="18" class="led-off" />
+                        <!-- Link 2 (Disconnected) -->
+                        <rect x="20" y="180" width="80" height="30" rx="5" class="c-dark c-stroke" transform="rotate(10 60 195)" />
+                        
+                        <!-- Dead Eyes -->
+                        <text x="90" y="190" fill="white" font-size="20" font-weight="bold">X X</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

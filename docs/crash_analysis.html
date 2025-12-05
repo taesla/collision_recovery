@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Summary</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 50px;
+            box-sizing: border-box;
+        }
+        .header {
+            border-bottom: 3px solid #0f172a;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+        .header h1 { font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -1px; }
+        .header span { font-size: 18px; color: #64748b; font-weight: 500; }
+
+        .main-card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            height: 100%;
+        }
+
+        .confidence-circle {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: conic-gradient(#0f172a 0% 99%, #cbd5e1 99% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .confidence-inner {
+            width: 160px;
+            height: 160px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .conf-score { font-size: 48px; font-weight: 900; color: #0f172a; line-height: 1; }
+        .conf-label { font-size: 14px; color: #64748b; font-weight: 600; margin-top: 5px; }
+
+        .content-box { flex: 1; }
+        .conclusion-title { font-size: 24px; font-weight: 800; color: #b91c1c; margin-bottom: 15px; display: flex; align-items: center; }
+        .conclusion-text { font-size: 20px; color: #334155; line-height: 1.6; font-weight: 500; }
+        .highlight { background: #fecaca; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px dashed #cbd5e1;
+        }
+        .flow-step { text-align: center; flex: 1; position: relative; }
+        .flow-icon { font-size: 32px; color: #475569; margin-bottom: 8px; }
+        .flow-text { font-size: 14px; font-weight: 700; color: #334155; }
+        .flow-arrow { color: #94a3b8; font-size: 20px; }
+        
+        .fatal-step .flow-icon { color: #dc2626; animation: pulse 1.5s infinite; }
+        .fatal-step .flow-text { color: #dc2626; }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1><i class="fas fa-search mr-3"></i>DSR 드라이버 크래시 원인 분석 (RCA)</h1>
+            <span>Executive Summary</span>
+        </div>
+
+        <div class="main-card">
+            <div class="confidence-circle">
+                <div class="confidence-inner">
+                    <span class="conf-score">99%</span>
+                    <span class="conf-label">Probability</span>
+                </div>
+            </div>
+
+            <div class="content-box">
+                <div class="conclusion-title">
+                    <i class="fas fa-bullhorn mr-3"></i>최종 결론 (Conclusion)
+                </div>
+                <p class="conclusion-text">
+                    DSR 드라이버는 <span class="highlight">SAFE_STOP 상태</span>에서 이동 명령(movel/movej)을 수신할 때, 
+                    <strong>상태 검증 없이</strong> 하위 제어기(DRCF)로 전달하여 
+                    <span class="highlight">버퍼 오버플로우</span>를 유발합니다.
+                </p>
+
+                <!-- Simple Flow Diagram -->
+                <div class="flow-diagram">
+                    <div class="flow-step">
+                        <i class="fas fa-robot flow-icon"></i>
+                        <div class="flow-text">SAFE_STOP</div>
+                    </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step">
+                        <i class="fas fa-terminal flow-icon"></i>
+                        <div class="flow-text">App: movel()</div>
+                    </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step fatal-step">
+                        <i class="fas fa-door-open flow-icon"></i>
+                        <div class="flow-text">Driver: No Check</div>
+                    </div>
+                    <i class="fas fa-arrow-right flow-arrow"></i>
+                    <div class="flow-step fatal-step">
+                        <i class="fas fa-bomb flow-icon"></i>
+                        <div class="flow-text">Queue Overflow</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

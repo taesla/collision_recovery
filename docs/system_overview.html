@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 50px;
+            box-sizing: border-box;
+        }
+        .header {
+            border-bottom: 3px solid #0f172a;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+        }
+        .header h1 { font-size: 36px; font-weight: 900; color: #0f172a; letter-spacing: -1px; }
+        .header span { font-size: 18px; color: #64748b; font-weight: 500; }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            height: 100%;
+        }
+
+        .card {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 25px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .state-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .state-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .state-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 18px;
+            color: white;
+        }
+
+        .state-info { flex: 1; }
+        .state-name { font-weight: 700; color: #334155; font-size: 16px; }
+        .state-desc { font-size: 13px; color: #64748b; }
+
+        .architecture-box {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border-radius: 16px;
+            padding: 25px;
+            color: white;
+        }
+
+        .arch-layer {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .arch-layer-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+        }
+
+        .arch-items {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .arch-item {
+            background: rgba(255,255,255,0.15);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .highlight-item {
+            background: #3b82f6;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tech-item {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .tech-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .tech-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: #334155;
+        }
+    </style>
+</head>
+<body>
+    <div class="slide">
+        <div class="header">
+            <h1><i class="fas fa-book mr-3"></i>충돌 복구 시스템 개요 (System Overview)</h1>
+            <span>Collision Recovery Architecture</span>
+        </div>
+
+        <div class="content-grid">
+            <!-- Left Column -->
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- Robot States -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-robot text-blue-600"></i>
+                        Robot States
+                    </div>
+                    <div class="state-list">
+                        <div class="state-item">
+                            <div class="state-badge" style="background: #22c55e;">1</div>
+                            <div class="state-info">
+                                <div class="state-name">STANDBY</div>
+                                <div class="state-desc">대기 상태 - 명령 수신 대기</div>
+                            </div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-badge" style="background: #3b82f6;">2</div>
+                            <div class="state-info">
+                                <div class="state-name">MOVING</div>
+                                <div class="state-desc">이동 중 - 모션 실행</div>
+                            </div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-badge" style="background: #eab308;">5</div>
+                            <div class="state-info">
+                                <div class="state-name">SAFE_STOP</div>
+                                <div class="state-desc">충돌 감지 - 안전 정지</div>
+                            </div>
+                        </div>
+                        <div class="state-item">
+                            <div class="state-badge" style="background: #8b5cf6;">8</div>
+                            <div class="state-info">
+                                <div class="state-name">RECOVERY</div>
+                                <div class="state-desc">복구 모드 - 수동 조그</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tech Stack -->
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-layer-group text-purple-600"></i>
+                        Tech Stack
+                    </div>
+                    <div class="tech-stack">
+                        <div class="tech-item">
+                            <div class="tech-icon">🤖</div>
+                            <div class="tech-name">ROS2 Humble</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">🐍</div>
+                            <div class="tech-name">Python 3.10</div>
+                        </div>
+                        <div class="tech-item">
+                            <div class="tech-icon">🦾</div>
+                            <div class="tech-name">Doosan SDK</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Architecture -->
+            <div class="architecture-box">
+                <div class="card-title" style="color: white;">
+                    <i class="fas fa-sitemap"></i>
+                    System Architecture
+                </div>
+
+                <div class="arch-layer">
+                    <div class="arch-layer-title">APPLICATION LAYER</div>
+                    <div class="arch-items">
+                        <div class="arch-item highlight-item">collision_recovery</div>
+                        <div class="arch-item">pick_and_place</div>
+                        <div class="arch-item">conveyor_control</div>
+                    </div>
+                </div>
+
+                <div class="arch-layer">
+                    <div class="arch-layer-title">ROS2 INTERFACE</div>
+                    <div class="arch-items">
+                        <div class="arch-item">/dsr01/system/get_robot_state</div>
+                        <div class="arch-item">/dsr01/motion/jog</div>
+                        <div class="arch-item">/dsr01/system/set_robot_mode</div>
+                    </div>
+                </div>
+
+                <div class="arch-layer">
+                    <div class="arch-layer-title">DRIVER LAYER</div>
+                    <div class="arch-items">
+                        <div class="arch-item">dsr_controller2</div>
+                        <div class="arch-item">DRFLEx.h</div>
+                    </div>
+                </div>
+
+                <div class="arch-layer">
+                    <div class="arch-layer-title">HARDWARE</div>
+                    <div class="arch-items">
+                        <div class="arch-item">Doosan M0609</div>
+                        <div class="arch-item">DRCF Controller</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px; text-align: center; padding: 15px; background: rgba(59, 130, 246, 0.2); border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.4);">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <span style="font-weight: 600;">핵심: SAFE_STOP 상태에서 이동 명령 차단</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

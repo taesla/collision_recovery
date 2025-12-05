@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doosan Robot Collision Recovery - Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap">
+    <style>
+        body { 
+            font-family: 'Noto Sans KR', sans-serif; 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .nav-btn {
+            transition: all 0.3s ease;
+        }
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        .nav-btn.active {
+            background: #0f172a;
+            color: white;
+        }
+        .slide-container {
+            width: 100%;
+            max-width: 1280px;
+            aspect-ratio: 16/9;
+            margin: 0 auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .slide-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .feature-card {
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <!-- Header -->
+    <header class="max-w-6xl mx-auto mb-8">
+        <div class="glass-card p-6">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-robot text-3xl text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-black text-slate-800">Collision Recovery System</h1>
+                        <p class="text-slate-500">Doosan Robot M0609 • ROS2 Humble</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <a href="https://github.com/taesla/collision_recovery" target="_blank" 
+                       class="px-5 py-2.5 bg-slate-800 text-white rounded-full font-semibold hover:bg-slate-700 transition flex items-center gap-2">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                    <a href="https://github.com/taesla/doosan_rokey_collabo1" target="_blank"
+                       class="px-5 py-2.5 bg-blue-600 text-white rounded-full font-semibold hover:bg-blue-500 transition flex items-center gap-2">
+                        <i class="fas fa-code"></i> Main Project
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto">
+        <!-- Navigation Tabs -->
+        <div class="glass-card p-4 mb-6">
+            <div class="flex flex-wrap gap-3 justify-center">
+                <button onclick="showSlide('summary')" id="btn-summary" class="nav-btn active px-6 py-3 rounded-full font-bold text-sm md:text-base">
+                    <i class="fas fa-search mr-2"></i>크래시 원인 분석
+                </button>
+                <button onclick="showSlide('scenario')" id="btn-scenario" class="nav-btn px-6 py-3 rounded-full font-bold bg-slate-100 text-sm md:text-base">
+                    <i class="fas fa-video mr-2"></i>크래시 시나리오
+                </button>
+                <button onclick="showSlide('overview')" id="btn-overview" class="nav-btn px-6 py-3 rounded-full font-bold bg-slate-100 text-sm md:text-base">
+                    <i class="fas fa-book mr-2"></i>시스템 개요
+                </button>
+            </div>
+        </div>
+
+        <!-- Slide Viewer -->
+        <div class="glass-card p-4 mb-8">
+            <div class="slide-container">
+                <iframe id="slide-frame" src="crash_analysis.html"></iframe>
+            </div>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="feature-card glass-card p-6">
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-shield-alt text-2xl text-red-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">충돌 감지</h3>
+                <p class="text-slate-600">로봇 상태를 실시간 모니터링하여 SAFE_STOP(5) 상태 전환을 즉시 감지합니다.</p>
+            </div>
+            <div class="feature-card glass-card p-6">
+                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-sync-alt text-2xl text-blue-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">자동 복구</h3>
+                <p class="text-slate-600">6단계 복구 시퀀스를 통해 안전하게 로봇을 정상 상태로 복원합니다.</p>
+            </div>
+            <div class="feature-card glass-card p-6">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mb-4">
+                    <i class="fas fa-code text-2xl text-green-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2">ROS2 통합</h3>
+                <p class="text-slate-600">ROS2 Humble과 완벽하게 통합되어 기존 시스템에 쉽게 적용 가능합니다.</p>
+            </div>
+        </div>
+
+        <!-- Quick Start -->
+        <div class="glass-card p-8 mb-8">
+            <h2 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+                <i class="fas fa-rocket text-blue-600"></i>
+                Quick Start
+            </h2>
+            <div class="bg-slate-900 rounded-xl p-6 overflow-x-auto">
+                <pre class="text-green-400 text-sm md:text-base"><code># Clone repository
+git clone https://github.com/taesla/collision_recovery.git
+
+# Navigate to directory
+cd collision_recovery
+
+# Run collision recovery
+python main.py</code></pre>
+            </div>
+        </div>
+
+        <!-- Recovery Sequence -->
+        <div class="glass-card p-8">
+            <h2 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
+                <i class="fas fa-list-ol text-purple-600"></i>
+                6-Step Recovery Sequence
+            </h2>
+            <div class="grid md:grid-cols-6 gap-4">
+                <div class="text-center p-4 bg-slate-50 rounded-xl">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">1</div>
+                    <p class="text-sm font-semibold text-slate-700">SAFE_STOP<br>Reset</p>
+                </div>
+                <div class="text-center p-4 bg-slate-50 rounded-xl">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">2</div>
+                    <p class="text-sm font-semibold text-slate-700">Enter<br>RECOVERY</p>
+                </div>
+                <div class="text-center p-4 bg-slate-50 rounded-xl">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">3</div>
+                    <p class="text-sm font-semibold text-slate-700">Jog Z+<br>50mm</p>
+                </div>
+                <div class="text-center p-4 bg-slate-50 rounded-xl">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">4</div>
+                    <p class="text-sm font-semibold text-slate-700">Complete<br>Recovery</p>
+                </div>
+                <div class="text-center p-4 bg-slate-50 rounded-xl">
+                    <div class="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">5</div>
+                    <p class="text-sm font-semibold text-slate-700">Exit<br>Recovery</p>
+                </div>
+                <div class="text-center p-4 bg-slate-50 rounded-xl">
+                    <div class="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">6</div>
+                    <p class="text-sm font-semibold text-slate-700">Servo<br>ON</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto mt-8 text-center text-slate-400 text-sm">
+        <p>© 2025 Collision Recovery System • Built with ROS2 Humble & Doosan Robotics SDK</p>
+    </footer>
+
+    <script>
+        function showSlide(type) {
+            const frame = document.getElementById('slide-frame');
+            const buttons = document.querySelectorAll('.nav-btn');
+            
+            // Remove active class from all buttons
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('bg-slate-100');
+            });
+            
+            // Add active class to clicked button
+            const activeBtn = document.getElementById('btn-' + type);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('bg-slate-100');
+            
+            // Change iframe source
+            switch(type) {
+                case 'summary':
+                    frame.src = 'crash_analysis.html';
+                    break;
+                case 'scenario':
+                    frame.src = 'crash_scenario.html';
+                    break;
+                case 'overview':
+                    frame.src = 'system_overview.html';
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
